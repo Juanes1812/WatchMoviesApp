@@ -19,7 +19,7 @@ const Drawer = createDrawerNavigator();
 function AdminDrawerNavigator() {
   return (
     <Drawer.Navigator initialRouteName="WatchMovies">
-      <Drawer.Screen name="WatchMovies" component={WatchMovies} />
+      <Drawer.Screen name="Inicio" component={WatchMovies} />
       <Drawer.Screen name="CrudActores" component={CrudActores} />
       <Drawer.Screen name="CrudDirectores" component={CrudDirectores} />
       <Drawer.Screen name="CrudPlataforma" component={CrudPlataforma} />
@@ -35,7 +35,7 @@ function AdminDrawerNavigator() {
 function UserDrawerNavigator() {
   return (
     <Drawer.Navigator initialRouteName="WatchMovies">
-      <Drawer.Screen name="WatchMovies" component={WatchMovies} />
+      <Drawer.Screen name="Inicio" component={WatchMovies} />
       {/* Puedes agregar más pantallas que sean solo de vista */}
     </Drawer.Navigator>
   );

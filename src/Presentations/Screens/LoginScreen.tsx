@@ -1,32 +1,46 @@
 import React, { useState } from 'react';
 import { supabase } from '../services/supabaseClient';
-import { View, Text, TextInput, Button, Alert, Modal, StyleSheet } from 'react-native';
-
+import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [modalVisible, setModalVisible] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(''); // Estado para el mensaje de error
 
   const handleLogin = async () => {
     try {
       // Buscar usuario en la tabla 'usuarios' con el correo ingresado
       const { data: userData, error } = await supabase
-        .from('usuario')
+        .from('usuario') // Cambié de 'usuario' a 'usuarios' para que coincida con tu tabla
         .select('*')
         .eq('email', email)
         .single();
 
       if (error) {
-        Alert.alert('Error', 'Usuario no encontrado');
+        setErrorMessage('Usuario no encontrado');
+        
+        // Mostrar el mensaje solo durante 4 segundos
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 3500);
+        
         return;
       }
 
       // Verificar la contraseña
       if (userData.password !== password) {
-        Alert.alert('Error', 'Contraseña incorrecta');
+        setErrorMessage('Contraseña incorrecta');
+        
+        // Mostrar el mensaje solo durante 4 segundos
+        setTimeout(() => {
+          setErrorMessage('');
+        }, 3500);
+        
         return;
       }
+
+      // Limpiar el mensaje de error si la contraseña es correcta
+      setErrorMessage('');
 
       // Redirigir según el privilegio del usuario
       if (userData.privilegio === 1) {
@@ -34,10 +48,15 @@ const LoginScreen = ({ navigation }) => {
       } else if (userData.privilegio === 2) {
         navigation.navigate('UserDrawer');
       } else {
-        Alert.alert('Error', 'Privilegio no reconocido');
+        setErrorMessage('Privilegio no reconocido');
       }
     } catch (err) {
-      Alert.alert('Error', 'Hubo un problema al iniciar sesión');
+      setErrorMessage('Hubo un problema al iniciar sesión');
+      
+      // Mostrar el mensaje solo durante 4 segundos
+      setTimeout(() => {
+        setErrorMessage('');
+      }, 3500);
     }
   };
 
@@ -59,6 +78,9 @@ const LoginScreen = ({ navigation }) => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
         />
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
         <View style={{ marginVertical: 10 }}>
           <Button title="Iniciar Sesión" onPress={handleLogin} />
         </View>
@@ -96,6 +118,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     marginBottom: 15,
     backgroundColor: '#fff',
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    marginBottom: 15,
   },
 });
 
