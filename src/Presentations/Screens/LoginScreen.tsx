@@ -12,7 +12,7 @@ const LoginScreen = ({ navigation }) => {
     try {
       // Buscar usuario en la tabla 'usuarios' con el correo ingresado
       const { data: userData, error } = await supabase
-        .from('usuarios')
+        .from('usuario')
         .select('*')
         .eq('email', email)
         .single();
@@ -42,49 +42,39 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <Modal
-      visible={modalVisible}
-      animationType="slide"
-      transparent={true}
-      onRequestClose={() => setModalVisible(false)}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.modalContent}>
-          <Text style={styles.titulo}>Inicio de Sesión</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Correo electrónico"
-            value={email}
-            onChangeText={(text) => setEmail(text)}
-            keyboardType="email-address"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Contraseña"
-            value={password}
-            onChangeText={(text) => setPassword(text)}
-            secureTextEntry
-          />
-          <View style={{ marginVertical: 10 }}>
-            <Button title="Iniciar Sesión" onPress={handleLogin} />
-          </View>
-          <View style={{ marginVertical: 10 }}>
-            <Button title="Cancelar" onPress={() => setModalVisible(false)} />
-          </View>
+    <View style={styles.container}>
+      <View style={styles.content}>
+        <Text style={styles.titulo}>Inicio de Sesión</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Correo electrónico"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña"
+          value={password}
+          onChangeText={(text) => setPassword(text)}
+          secureTextEntry
+        />
+        <View style={{ marginVertical: 10 }}>
+          <Button title="Iniciar Sesión" onPress={handleLogin} />
         </View>
       </View>
-    </Modal>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  modalContainer: {
+  container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
-  modalContent: {
+  content: {
     width: 300,
     backgroundColor: '#354f5f',
     padding: 20,
