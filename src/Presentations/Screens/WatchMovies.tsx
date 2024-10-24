@@ -25,7 +25,7 @@ export const WatchMovies = () => {
               puntaje,
               plataforma (nombre), 
               director (nombre), 
-              serie_actor (actor (nombre)), 
+              serie_actor (actor (nombre, apellido)), 
               serie_idioma (idioma (nombre))`
                 );
 
@@ -72,19 +72,6 @@ export const WatchMovies = () => {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }
 
-    // Filtra la imagen con id 1
-    const imagenPelicula1 = images.find(image => image.id === 1);
-    const imagenPelicula2 = images.find(image => image.id === 2);
-    const imagenPelicula3 = images.find(image => image.id === 3);
-    const imagenPelicula4 = images.find(image => image.id === 4);
-    const imagenPelicula5 = images.find(image => image.id === 5);
-    const imagenPelicula6 = images.find(image => image.id === 6);
-    const imagenPelicula7 = images.find(image => image.id === 7);
-    const imagenPelicula8 = images.find(image => image.id === 8);
-    const imagenPelicula9 = images.find(image => image.id === 9);
-    const imagenPelicula10 = images.find(image => image.id === 10);
-    const imagenPelicula11 = images.find(image => image.id === 11);
-    const imagenPelicula12 = images.find(image => image.id === 12);
 
     const abrirModal = (id_seleccionado) => {
         const filtro = datos.find(item => item.id === id_seleccionado);
@@ -122,7 +109,7 @@ export const WatchMovies = () => {
                                 <Text>Actores:</Text>
                                 {datosFiltrados.serie_actor.map((actorItem, index) => (
                                     <Text key={index} style={style.actorNombre}>
-                                        - {actorItem.actor.nombre}
+                                        - {actorItem.actor.nombre} {actorItem.actor.apellido}
                                     </Text>
                                 ))}
 
@@ -210,21 +197,37 @@ export const WatchMovies = () => {
                     </View>
 
                     <View style={style.rowSeries}>
-                        <Image
-                            source={require('../../../assets/images/breakingbad.jpg')}
-                            style={style.imagenSerie}
+                        <TouchableOpacity onPress={() => abrirModal(4)}>
+                            <View>
 
-                        />
-                        <Image
-                            source={require('../../../assets/images/avatar.jpg')}
-                            style={style.imagenSerie}
+                                <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/the_dark_knight-102763119-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
 
-                        />
-                        <Image
-                            source={require('../../../assets/images/theoffice.jpg')}
-                            style={style.imagenSerie}
+                            </View>
+                        </TouchableOpacity>
 
-                        />
+                        <TouchableOpacity onPress={() => abrirModal(5)}>
+                            <View>
+
+                                <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/inception-652954101-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
+
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => abrirModal(6)}>
+                            <View>
+
+                                <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/interstellar-366875261-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
+
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -233,24 +236,34 @@ export const WatchMovies = () => {
                         <Text style={style.titleGenre}> {/*Titulo de seccion*/}
                             Drama
                         </Text>
-                    </View>
-
+                    </View>                    
                     <View style={style.rowSeries}>
-                        <Image
-                            source={require('../../../assets/images/peakyblinders.png')}
-                            style={style.imagenSerie}
+                    <TouchableOpacity onPress={() => abrirModal(7)}>
+                            <View>
+                                <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/jurassic_park-187298880-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => abrirModal(8)}>
+                            <View>
+                               <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/jaws-195807307-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
 
-                        />
-                        <Image
-                            source={require('../../../assets/images/gameofthrones.jpg')}
-                            style={style.imagenSerie}
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => abrirModal(9)}>
+                            <View>
+                                <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/schindler_s_list-473662617-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
 
-                        />
-                        <Image
-                            source={require('../../../assets/images/strangerthings.jpg')}
-                            style={style.imagenSerie}
-
-                        />
+                            </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
 
