@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { StyleSheet, Button, Text, Image, View, Modal, ScrollView, ActivityIndicator, TouchableOpacity, FlatList } from 'react-native';
 import { supabase } from '../services/supabaseClient';
+import { PrimaryButton } from '../Componentes';
 
 
 export const WatchMovies = () => {
@@ -8,7 +9,7 @@ export const WatchMovies = () => {
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedMovieId, setSelectedMovieId] = useState(null);
-    const [datos, setDatos] = useState({});
+    const [datos, setDatos] = useState([]);
 
 
     const fetchData = async () => {
@@ -86,14 +87,14 @@ export const WatchMovies = () => {
     const imagenPelicula12 = images.find(image => image.id === 12);
 
     const abrirModal = (id) => {
-        const datosFiltrados = datos.find(item => item.id === ID_imagen_serie);
         setSelectedMovieId(id);
         setModalVisible(true);
     };
     const cerrarModal = () => {
         setModalVisible(false);
     };
-    const datosFiltrados = datos.find(item => item.id === ID_imagen_serie);
+
+    const datosFiltrados = datos.find(item => item.id === setSelectedMovieId);
 
     return (
         <View style={style.container}>
@@ -112,11 +113,10 @@ export const WatchMovies = () => {
                             renderItem={({ item }) => (
                                 <View style={style.itemContainer}>
                                     <View>
-                                            <Image
-                                                source={{ uri: item.imagen_url }}
-                                                style={style.imagenSerie}
-                                            />
-
+                                        <Image
+                                            source={{ uri: item.imagen_url }}
+                                            style={style.imagenSerie}
+                                        />
                                     </View>
                                     <Text style={style.title}>Título: {item.titulo}</Text>
                                     <Text>Plataforma: {item.plataforma.nombre}</Text>
@@ -144,6 +144,11 @@ export const WatchMovies = () => {
                                 </View>
                             )}
                         />
+                        <PrimaryButton
+                            label='Cancelar'
+                            onPress={() => setModalVisible(false)}
+                            onLongPress={() => setModalVisible(false)}
+                        />
                     </View>
                 </View>
             </Modal>
@@ -169,32 +174,30 @@ export const WatchMovies = () => {
 
                         <TouchableOpacity onPress={() => abrirModal(1)}>
                             <View>
-                                {imagenPelicula1 && (
-                                    <Image
-                                        source={{ uri: 'https://pics.filmaffinity.com/pulp_fiction-210382116-large.jpg' }}
-                                        style={style.imagenSerie}
-                                    />
-                                )}
+                                <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/pulp_fiction-210382116-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => abrirModal(2)}>
                             <View>
-                                {imagenPelicula2 && (
-                                    <Image
-                                        source={{ uri: imagenPelicula2.imagen_url }}
-                                        style={style.imagenSerie}
-                                    />
-                                )}
+
+                                <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/kill_bill_volume_1-216872360-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
+
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => abrirModal(3)}>
                             <View>
-                                {imagenPelicula3 && (
-                                    <Image
-                                        source={{ uri: imagenPelicula3.imagen_url }}
-                                        style={style.imagenSerie}
-                                    />
-                                )}
+
+                                <Image
+                                    source={{ uri: 'https://pics.filmaffinity.com/django_unchained-956246347-large.jpg' }}
+                                    style={style.imagenSerie}
+                                />
+
                             </View>
                         </TouchableOpacity>
 
@@ -343,7 +346,7 @@ const style = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContenido: {
-        width: 300,
+        width: 350,
         padding: 20,
         backgroundColor: 'white',
         borderRadius: 10,
