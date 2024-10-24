@@ -8,7 +8,7 @@ export const WatchMovies = () => {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedMovieId, setSelectedMovieId] = useState(null);
+    const [datosFiltrados, setDatosFiltrados] = useState(null);
     const [datos, setDatos] = useState([]);
 
 
@@ -27,7 +27,7 @@ export const WatchMovies = () => {
               director (nombre), 
               serie_actor (actor (nombre)), 
               serie_idioma (idioma (nombre))`
-                ).eq('id', 1);
+                );
 
             if (error) {
                 console.error('Error al obtener datos:', error);
@@ -86,15 +86,15 @@ export const WatchMovies = () => {
     const imagenPelicula11 = images.find(image => image.id === 11);
     const imagenPelicula12 = images.find(image => image.id === 12);
 
-    const abrirModal = (id) => {
-        setSelectedMovieId(id);
+    const abrirModal = (id_seleccionado) => {
+        const filtro = datos.find(item => item.id === id_seleccionado);
+        setDatosFiltrados(filtro);
         setModalVisible(true);
     };
     const cerrarModal = () => {
         setModalVisible(false);
     };
 
-    const datosFiltrados = datos.find(item => item.id === setSelectedMovieId);
 
     return (
         <View style={style.container}>
@@ -107,47 +107,44 @@ export const WatchMovies = () => {
             >
                 <View style={style.modalContainer}>
                     <View style={style.modalContenido}>
-                        <FlatList
-                            data={datos}
-                            keyExtractor={(item) => item.id.toString()} // Usa el ID de la serie como clave
-                            renderItem={({ item }) => (
-                                <View style={style.itemContainer}>
-                                    <View>
-                                        <Image
-                                            source={{ uri: item.imagen_url }}
-                                            style={style.imagenSerie}
-                                        />
-                                    </View>
-                                    <Text style={style.title}>Título: {item.titulo}</Text>
-                                    <Text>Plataforma: {item.plataforma.nombre}</Text>
-                                    <Text>Director: {item.director.nombre}</Text>
+                        {/* Comprobar si se encontraron datos filtrados */}
+                        {datosFiltrados ? (
+                            <View style={style.itemContainer}>
+                                <Image
+                                    source={{ uri: datosFiltrados.imagen_url }}
+                                    style={style.imagenSerie}
+                                />
+                                <Text style={style.title}>Título: {datosFiltrados.titulo}</Text>
+                                <Text>Plataforma: {datosFiltrados.plataforma.nombre}</Text>
+                                <Text>Director: {datosFiltrados.director.nombre}</Text>
 
-                                    {/* Mostrar todos los actores asociados con la serie */}
-                                    <Text>Actores:</Text>
-                                    {item.serie_actor.map((actorItem, index) => (
-                                        <Text key={index} style={style.actorNombre}>
-                                            - {actorItem.actor.nombre}
-                                        </Text>
-                                    ))}
+                                {/* Mostrar todos los actores asociados con la serie */}
+                                <Text>Actores:</Text>
+                                {datosFiltrados.serie_actor.map((actorItem, index) => (
+                                    <Text key={index} style={style.actorNombre}>
+                                        - {actorItem.actor.nombre}
+                                    </Text>
+                                ))}
 
-                                    {/* Mostrar todos los idiomas asociados con la serie */}
-                                    <Text>Idiomas:</Text>
-                                    {item.serie_idioma.map((idiomaItem, index) => (
-                                        <Text key={index} style={style.idiomaNombre}>
-                                            - {idiomaItem.idioma.nombre}
-                                        </Text>
-                                    ))}
+                                {/* Mostrar todos los idiomas asociados con la serie */}
+                                <Text>Idiomas:</Text>
+                                {datosFiltrados.serie_idioma.map((idiomaItem, index) => (
+                                    <Text key={index} style={style.idiomaNombre}>
+                                        - {idiomaItem.idioma.nombre}
+                                    </Text>
+                                ))}
 
-                                    <Text>Descripción: {item.descripcion}</Text>
-                                    <Text>Fecha de Estreno: {item.fechaEstreno}</Text>
-                                    <Text>Puntaje: {item.puntaje}</Text>
-                                </View>
-                            )}
-                        />
+                                <Text>Descripción: {datosFiltrados.descripcion}</Text>
+                                <Text>Fecha de Estreno: {datosFiltrados.fechaEstreno}</Text>
+                                <Text>Puntaje: {datosFiltrados.puntaje}</Text>
+                            </View>
+                        ) : (
+                            <Text>No se encontraron datos.</Text>
+                        )}
                         <PrimaryButton
                             label='Cancelar'
-                            onPress={() => setModalVisible(false)}
-                            onLongPress={() => setModalVisible(false)}
+                            onPress={cerrarModal}
+                            onLongPress={cerrarModal}
                         />
                     </View>
                 </View>
