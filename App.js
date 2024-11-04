@@ -11,6 +11,7 @@ import { CrudSeries } from './src/Presentations/Screens/CrudSeries';
 import { CrudDirectores } from './src/Presentations/Screens/CrudDirectores';
 import { CrudSerie_actor } from './src/Presentations/Screens/CrudSerie_actor';
 import { CrudSerie_idioma } from './src/Presentations/Screens/CrudSerie_Idioma';
+import FoodImage from './src/Presentations/Screens/FoodImage';
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -20,6 +21,7 @@ function AdminDrawerNavigator() {
   return (
     <Drawer.Navigator initialRouteName="WatchMovies">
       <Drawer.Screen name="Inicio" component={WatchMovies} />
+      <Drawer.Screen name="¿Qué Comer?" component={FoodImage} />
       <Drawer.Screen name="CrudActores" component={CrudActores} />
       <Drawer.Screen name="CrudDirectores" component={CrudDirectores} />
       <Drawer.Screen name="CrudPlataforma" component={CrudPlataforma} />
@@ -36,6 +38,7 @@ function UserDrawerNavigator() {
   return (
     <Drawer.Navigator initialRouteName="WatchMovies">
       <Drawer.Screen name="Inicio" component={WatchMovies} />
+      <Stack.Screen name="¿Qué Comer?" component={FoodImage} />
       {/* Puedes agregar más pantallas que sean solo de vista */}
     </Drawer.Navigator>
   );
