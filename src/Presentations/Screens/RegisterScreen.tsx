@@ -2,68 +2,17 @@ import React, { useState } from 'react';
 import { supabase } from '../services/supabaseClient';
 import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
 
-const LoginScreen = ({ navigation }) => {
+const RegisterScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState(''); // Estado para el mensaje de error
 
-  const handleLogin = async () => {
-    try {
-      // Buscar usuario en la tabla 'usuarios' con el correo ingresado
-      const { data: userData, error } = await supabase
-        .from('usuario') // Cambié de 'usuario' a 'usuarios' para que coincida con tu tabla
-        .select('*')
-        .eq('email', email)
-        .single();
-
-      if (error) {
-        setErrorMessage('Usuario no encontrado');
-        
-        // Mostrar el mensaje solo durante 4 segundos
-        setTimeout(() => {
-          setErrorMessage('');
-        }, 3500);
-        
-        return;
-      }
-
-      // Verificar la contraseña
-      if (userData.password !== password) {
-        setErrorMessage('Contraseña incorrecta');
-        
-        // Mostrar el mensaje solo durante 4 segundos
-        setTimeout(() => {
-          setErrorMessage('');
-        }, 3500);
-        
-        return;
-      }
-
-      // Limpiar el mensaje de error si la contraseña es correcta
-      setErrorMessage('');
-
-      // Redirigir según el privilegio del usuario
-      if (userData.privilegio === 1) {
-        navigation.navigate('AdminDrawer');
-      } else if (userData.privilegio === 2) {
-        navigation.navigate('UserDrawer');
-      } else {
-        setErrorMessage('Privilegio no reconocido');
-      }
-    } catch (err) {
-      setErrorMessage('Hubo un problema al iniciar sesión');
-      
-      // Mostrar el mensaje solo durante 4 segundos
-      setTimeout(() => {
-        setErrorMessage('');
-      }, 3500);
-    }
-  };
+  
 
   return (
     <View style={styles.container}>
       <View style={styles.content}>
-        <Text style={styles.titulo}>Inicio de Sesión</Text>
+        <Text style={styles.titulo}>Registro</Text>
         <TextInput
           style={styles.input}
           placeholder="Correo electrónico"
@@ -82,7 +31,6 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
         <View style={{ marginVertical: 10 }}>
-          <Button title="Iniciar Sesión" onPress={handleLogin} />
         </View>
       </View>
     </View>
@@ -126,4 +74,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

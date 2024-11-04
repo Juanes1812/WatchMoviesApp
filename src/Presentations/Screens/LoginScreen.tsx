@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../services/supabaseClient';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
@@ -18,24 +19,24 @@ const LoginScreen = ({ navigation }) => {
 
       if (error) {
         setErrorMessage('Usuario no encontrado');
-        
+
         // Mostrar el mensaje solo durante 4 segundos
         setTimeout(() => {
           setErrorMessage('');
         }, 3500);
-        
+
         return;
       }
 
       // Verificar la contraseña
       if (userData.password !== password) {
         setErrorMessage('Contraseña incorrecta');
-        
+
         // Mostrar el mensaje solo durante 4 segundos
         setTimeout(() => {
           setErrorMessage('');
         }, 3500);
-        
+
         return;
       }
 
@@ -52,7 +53,7 @@ const LoginScreen = ({ navigation }) => {
       }
     } catch (err) {
       setErrorMessage('Hubo un problema al iniciar sesión');
-      
+
       // Mostrar el mensaje solo durante 4 segundos
       setTimeout(() => {
         setErrorMessage('');
@@ -82,7 +83,14 @@ const LoginScreen = ({ navigation }) => {
           <Text style={styles.errorText}>{errorMessage}</Text>
         ) : null}
         <View style={{ marginVertical: 10 }}>
-          <Button title="Iniciar Sesión" onPress={handleLogin} />
+
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={styles.buttonText}>Iniciar Sesión</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Registro de Usuarios')}>
+            <Text style={styles.buttonText}>Registrarme</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -99,8 +107,21 @@ const styles = StyleSheet.create({
   content: {
     width: 300,
     backgroundColor: '#354f5f',
-    padding: 20,
+    paddingHorizontal: 20,
+    paddingTop: 10,
     borderRadius: 10,
+  },
+  button: {
+    backgroundColor: '#007BFF', // Color de fondo azul
+    padding: 15, // Espaciado interno
+    borderRadius: 5, // Bordes redondeados
+    alignItems: 'center', // Centra el texto dentro del botón
+    marginVertical: 5, // Espacio vertical entre botones
+  },
+  buttonText: {
+    color: '#FFFFFF', // Color del texto en blanco
+    fontSize: 16, // Tamaño de fuente
+    fontWeight: 'bold', // Fuente en negrita
   },
   titulo: {
     color: '#fff',
@@ -116,13 +137,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingHorizontal: 12,
-    marginBottom: 15,
+    marginBottom: 6,
     backgroundColor: '#fff',
   },
   errorText: {
     color: 'red',
     textAlign: 'center',
-    marginBottom: 15,
+    marginVertical: 5,
   },
 });
 
