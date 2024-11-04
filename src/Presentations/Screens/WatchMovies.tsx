@@ -24,7 +24,7 @@ export const WatchMovies = () => {
               fechaEstreno, 
               puntaje,
               plataforma (nombre), 
-              director (nombre), 
+              director (nombre, apellido), 
               serie_actor (actor (nombre, apellido)), 
               serie_idioma (idioma (nombre))`
                 );
@@ -94,36 +94,34 @@ export const WatchMovies = () => {
             >
                 <View style={style.modalContainer}>
                     <View style={style.modalContenido}>
-                        {/* Comprobar si se encontraron datos filtrados */}
                         {datosFiltrados ? (
                             <View style={style.itemContainer}>
-                                <Image
-                                    source={{ uri: datosFiltrados.imagen_url }}
-                                    style={style.imagenSerie}
-                                />
-                                <Text style={style.title}>Título: {datosFiltrados.titulo}</Text>
-                                <Text>Plataforma: {datosFiltrados.plataforma.nombre}</Text>
-                                <Text>Director: {datosFiltrados.director.nombre}</Text>
-
-                                {/* Mostrar todos los actores asociados con la serie */}
-                                <Text>Actores:</Text>
-                                {datosFiltrados.serie_actor.map((actorItem, index) => (
-                                    <Text key={index} style={style.actorNombre}>
-                                        - {actorItem.actor.nombre} {actorItem.actor.apellido}
-                                    </Text>
-                                ))}
-
-                                {/* Mostrar todos los idiomas asociados con la serie */}
-                                <Text>Idiomas:</Text>
-                                {datosFiltrados.serie_idioma.map((idiomaItem, index) => (
-                                    <Text key={index} style={style.idiomaNombre}>
-                                        - {idiomaItem.idioma.nombre}
-                                    </Text>
-                                ))}
-
-                                <Text>Descripción: {datosFiltrados.descripcion}</Text>
+                                <View style={style.itemContainerTitle}>
+                                    <Text style={style.itemTitle}>{datosFiltrados.titulo}</Text>
+                                </View>
+                                <View style={style.rowModal}>
+                                    <View style={style.imagenSerie}>
+                                    <Image
+                                        source={{ uri: datosFiltrados.imagen_url }}
+                                        style={style.imagenSerie}
+                                    />
+                                    </View>                              
+                                    <View style={style.itemContainerPuntaje}>
+                                        <Text style={style.itemTextoPuntaje}>{datosFiltrados.puntaje}</Text>
+                                    </View>
+                                </View>
+                                <Text style={style.itemTextoDescripcion}>{datosFiltrados.descripcion}</Text>
+                                <Text>Director: {datosFiltrados.director.nombre} {datosFiltrados.director.apellido}</Text>
+                                <Text style={style.actorNombre}>Actores: {datosFiltrados.serie_actor
+                                    .map((actorItem) => `${actorItem.actor.nombre} ${actorItem.actor.apellido}`)
+                                    .join(', ')}
+                                </Text>
                                 <Text>Fecha de Estreno: {datosFiltrados.fechaEstreno}</Text>
-                                <Text>Puntaje: {datosFiltrados.puntaje}</Text>
+                                <Text>Plataforma: {datosFiltrados.plataforma.nombre}</Text>
+                                <Text style={style.idiomaNombre}>Idiomas: {datosFiltrados.serie_idioma
+                                    .map((idiomaItem) => idiomaItem.idioma.nombre)
+                                    .join(', ')}
+                                </Text>
                             </View>
                         ) : (
                             <Text>No se encontraron datos.</Text>
@@ -171,7 +169,6 @@ export const WatchMovies = () => {
                                     source={{ uri: 'https://pics.filmaffinity.com/kill_bill_volume_1-216872360-large.jpg' }}
                                     style={style.imagenSerie}
                                 />
-
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => abrirModal(3)}>
@@ -236,9 +233,9 @@ export const WatchMovies = () => {
                         <Text style={style.titleGenre}> {/*Titulo de seccion*/}
                             Drama
                         </Text>
-                    </View>                    
+                    </View>
                     <View style={style.rowSeries}>
-                    <TouchableOpacity onPress={() => abrirModal(7)}>
+                        <TouchableOpacity onPress={() => abrirModal(7)}>
                             <View>
                                 <Image
                                     source={{ uri: 'https://pics.filmaffinity.com/jurassic_park-187298880-large.jpg' }}
@@ -248,7 +245,7 @@ export const WatchMovies = () => {
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => abrirModal(8)}>
                             <View>
-                               <Image
+                                <Image
                                     source={{ uri: 'https://pics.filmaffinity.com/jaws-195807307-large.jpg' }}
                                     style={style.imagenSerie}
                                 />
@@ -310,12 +307,23 @@ const style = StyleSheet.create({
     imagenSerie: {
         width: 120,
         height: 180,
-        resizeMode: 'stretch',  /*contain, cover, stretch, center*/
+        resizeMode: 'stretch',  // Ajusta la imagen al tamaño especificado
         marginHorizontal: 4,
         borderRadius: 5,
+        shadowColor: '#000',         // Color de la sombra en negro
+        shadowOffset: { width: 6, height: 4 }, // Desplazamiento mínimo
+        shadowOpacity: 0.3,          // Aumentar la opacidad para que sea más visible
+        shadowRadius: 3,             // Radio bajo para un borde suave
     },
+
+
     rowSeries: {
         flexDirection: 'row',
+    },
+    rowModal: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     sectionGenre: {
         height: 'auto',
@@ -371,15 +379,41 @@ const style = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
-    title: {
-        fontSize: 18,
+    itemTitle: {
+        fontSize: 30,
         fontWeight: 'bold',
+        fontFamily: 'Sans-serif',
+
+    },
+    itemContainerTitle: {
+        alignItems: 'center',
     },
     actorNombre: {
-        fontSize: 16,
+
     },
     idiomaNombre: {
-        fontSize: 16,
+
+    },
+    itemTextoPuntaje: {
+        fontSize: 40,
+        fontWeight: 'bold',
+        fontFamily: 'Sans-serif',
+    },
+    itemContainerPuntaje: {
+        width: 100,
+        height: 100,
+        marginLeft: 20,
+        backgroundColor: '#FFD700', //Dorado color
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 20,
+        shadowColor: '#000', // Sombra sutil para darle profundidad
+        shadowOffset: { width: 2, height: 4 },
+        shadowOpacity: 0.3,
+    },
+
+    itemTextoDescripcion: {
+        textAlign: 'justify',
     },
 })
 
