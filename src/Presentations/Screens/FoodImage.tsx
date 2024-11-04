@@ -5,6 +5,7 @@ import { StyleSheet, Button, Text, Image, View, Modal, ScrollView, ActivityIndic
 export default function FoodImage() {
   const [imageUrl, setImageUrl] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [imageCategory, setImageCategory] = useState(null);
 
   const fetchImage = () => {
     setLoading(true);
@@ -13,6 +14,7 @@ export default function FoodImage() {
       .then(data => {
         setImageUrl(data.image);
         setLoading(false); 
+        setImageCategory ( data.image.split('images/')[1].split('/')[0]);
       })
       .catch(error => {
         console.error('Error:', error);
@@ -24,12 +26,16 @@ export default function FoodImage() {
     fetchImage(); 
   }, []);
 
+  
+
   return (
     <View style={styles.container}>
       <View>
-        <Text>Decíde que puedes comer mientras ves la película</Text>
+        <Text>¿No sabes que pedir a domicilio mientras ves la película?</Text>
+        <Text>Elíge aleatoriamente:</Text>
       </View>
       <View>
+        <Text>La comida elegida para tí es: {imageCategory}</Text>
         {loading ? (
           <ActivityIndicator size="large" color="#0000ff" />
         ) : imageUrl ? (
@@ -38,7 +44,7 @@ export default function FoodImage() {
           <Text>Error al cargar la imagen.</Text>
         )}
         <Button
-          title="Recargar imagen"
+          title="Elegir comida de forma aleatoria"
           onPress={() => {
             setLoading(true);
             fetchImage(); 
@@ -56,6 +62,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: '#354f5f',
   },
   image: {
     width: 300,
