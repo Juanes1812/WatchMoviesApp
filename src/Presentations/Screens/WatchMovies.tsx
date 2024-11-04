@@ -136,7 +136,7 @@ export const WatchMovies = () => {
             </Modal>
 
             <ScrollView>
-                <View style={style.sectionTitle}>  {/* Div para el titulo*/}
+                <View style={style.sectionTitle}> 
                     <Text style={style.mainTitle}>
                         WhatchMovies
                     </Text>
