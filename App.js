@@ -53,7 +53,11 @@ export default function App() {
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen name="Registro de Usuarios" component={RegisterScreen} />
+        <Stack.Screen 
+        name="Registro de Usuarios" 
+        component={RegisterScreen} 
+        options={{ headerShown: false }} 
+        />
         <Stack.Screen
           name="AdminDrawer"
           component={AdminDrawerNavigator}

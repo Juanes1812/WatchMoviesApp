@@ -1,11 +1,31 @@
 import React, { useState } from 'react';
 import { supabase } from '../services/supabaseClient';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }) => {
+  const [nombre, setNombre] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [errorMessage, setErrorMessage] = useState(''); // Estado para el mensaje de error
+  const [fechaNacimiento, setFechaNacimiento] = useState('');
+  const privilegio = 2;
+
+
+  const agregaUsuario = async () => {
+    if (nombre && email && password && fechaNacimiento&&privilegio) {
+      const nuevoUsuario= { nombre, email, password, fechaNacimiento, privilegio };
+      const { data, error } = await supabase.from('usuario').insert([nuevoUsuario]);
+
+      if (error) {
+        console.error('Error al agregar Usuario:', error.message);
+      } else {
+        setNombre('');
+        setEmail('');
+        setPassword('');
+        setFechaNacimiento('');
+        }
+    }
+    navigation.navigate('Login');
+  };
 
   
 
@@ -13,6 +33,13 @@ const RegisterScreen = () => {
     <View style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.titulo}>Registro</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Nombre"
+          value={nombre}
+          onChangeText={(text) => setNombre(text)}
+          keyboardType="default"
+        />
         <TextInput
           style={styles.input}
           placeholder="Correo electrónico"
@@ -27,11 +54,20 @@ const RegisterScreen = () => {
           onChangeText={(text) => setPassword(text)}
           secureTextEntry
         />
-        {errorMessage ? (
-          <Text style={styles.errorText}>{errorMessage}</Text>
-        ) : null}
-        <View style={{ marginVertical: 10 }}>
+        <TextInput
+          style={styles.input}
+          placeholder="Fecha Nacimiento"
+          value={fechaNacimiento}
+          onChangeText={(text) => setFechaNacimiento(text)}
+        />
+
+        <View style={{ marginVertical: 5 }}>
+        <TouchableOpacity style={styles.button} onPress={agregaUsuario}>
+            <Text style={styles.buttonText}>Registrarme</Text>
+          </TouchableOpacity>
+
         </View>
+
       </View>
     </View>
   );
@@ -71,6 +107,18 @@ const styles = StyleSheet.create({
     color: 'red',
     textAlign: 'center',
     marginBottom: 15,
+  },
+  button: {
+    backgroundColor: '#007BFF', // Color de fondo azul
+    padding: 15, // Espaciado interno
+    borderRadius: 5, // Bordes redondeados
+    alignItems: 'center', // Centra el texto dentro del botón
+    marginVertical: 5, // Espacio vertical entre botones
+  },
+  buttonText: {
+    color: '#FFFFFF', // Color del texto en blanco
+    fontSize: 16, // Tamaño de fuente
+    fontWeight: 'bold', // Fuente en negrita
   },
 });
 

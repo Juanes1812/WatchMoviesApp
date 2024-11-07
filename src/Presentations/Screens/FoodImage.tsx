@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, Button, Text, Image, View, Linking, ActivityIndicator, TouchableOpacity, FlatList, ScrollView } from 'react-native';
+import { StyleSheet, Button, Text, Image, View, Linking, ActivityIndicator, TouchableOpacity, FlatList, ScrollView, ScrollViewComponent } from 'react-native';
 
 
 export default function FoodImage() {
@@ -30,39 +30,43 @@ export default function FoodImage() {
 
   return (
     <View style={style.container}>
-      <View style={style.sectionTitle}>
-        <Text style={style.mainTitle}>¿No sabes que comer mientras ves la película?</Text>
-        <Text style={style.mainSubtitle}>Nosotros la elegimos por tí:</Text>
-      </View>
-      <View style={style.imageContainer}>
+      <ScrollView>
+        <View style={style.sectionTitle}>
+          <Text style={style.mainTitle}>¿No sabes que comer mientras ves la película?</Text>
+          <Text style={style.mainSubtitle}>Nosotros la elegimos por tí:</Text>
+        </View>
+        <View style={style.imageContainer}>
 
-        {loading ? (
-          <ActivityIndicator size="large" color="#0000ff" />
-        ) : imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={style.image} />
-        ) : (
-          <Text>Error al cargar la imagen.</Text>
-        )}
+          {loading ? (
+            <ActivityIndicator size="large" color="#0000ff" />
+          ) : imageUrl ? (
+            <Image source={{ uri: imageUrl }} style={style.image} />
+          ) : (
+            <Text>Error al cargar la imagen.</Text>
+          )}
 
-        <Text style={style.categoryText}>La comida elegida para tí es: {imageCategory}</Text>
+          <Text style={style.categoryText}>La comida elegida para tí es: {imageCategory}</Text>
 
 
-        <TouchableOpacity style={style.button} onPress={() => {
-          setLoading(true);
-          fetchImage();
-        }}>
-          <Text style={style.buttonText}>Elegir comida de forma aleatoria</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={style.button}
-          onPress={() => {
-            Linking.openURL('https://www.google.com/search?q=¿Cómo hacer ' + imageCategory + '?&tbm=vid');
-          }}
-        >
-          <Text style={style.buttonText}>¿Cómo puedo prepararlo?</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={style.button} onPress={() => {
+            setLoading(true);
+            fetchImage();
+          }}>
+            <Text style={style.buttonText}>Elegir comida de forma aleatoria</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={style.button}
+            onPress={() => {
+              Linking.openURL('https://www.google.com/search?q=¿Cómo hacer ' + imageCategory + '?&tbm=vid');
+            }}
+          >
+            <Text style={style.buttonText}>¿Cómo puedo prepararlo?</Text>
+          </TouchableOpacity>
 
-      </View>
+        </View>
+
+      </ScrollView>
+
 
     </View>
   );
@@ -151,5 +155,6 @@ const style = StyleSheet.create({
     marginVertical: 10,
     justifyContent: "center",
     textAlign: "center",
-  }
+  },
+  
 });
