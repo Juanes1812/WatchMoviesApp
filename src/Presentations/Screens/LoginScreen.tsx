@@ -44,10 +44,12 @@ const LoginScreen = ({ navigation }) => {
       setErrorMessage('');
 
       // Redirigir según el privilegio del usuario
+      let codigoUsuario = userData.id; //Código pasa saber en cual Usuario Nos vamos a ubicar
       if (userData.privilegio === 1) {
-        navigation.navigate('AdminDrawer');
+        console.log('Este es el codigo Usuario'+codigoUsuario);
+        navigation.navigate('AdminDrawer', {codigoUsuario});
       } else if (userData.privilegio === 2) {
-        navigation.navigate('UserDrawer');
+        navigation.navigate('UserDrawer', { codigoUsuario});
       } else {
         setErrorMessage('Privilegio no reconocido');
       }

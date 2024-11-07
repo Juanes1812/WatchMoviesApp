@@ -4,12 +4,15 @@ import { supabase } from '../services/supabaseClient';
 import { PrimaryButton } from '../Componentes';
 
 
-export const WatchMovies = () => {
+export const WatchMovies = ({ codigoUsuario }) => {
     const [images, setImages] = useState([]);
     const [loading, setLoading] = useState(true);
     const [modalVisible, setModalVisible] = useState(false);
     const [datosFiltrados, setDatosFiltrados] = useState(null);
     const [datos, setDatos] = useState([]);
+    const [datosListaSeries, setdatosListaSeries] = useState([]);
+
+    console.log('Este es el codigo Usuario' + codigoUsuario); // prueba de que el codigoUsuario fué bien exportado
 
 
     const fetchData = async () => {
@@ -33,6 +36,7 @@ export const WatchMovies = () => {
                 console.error('Error al obtener datos:', error);
             } else {
                 setDatos(data); // Guardar los datos en el estado
+                console.log('Datos para la Daots' + data);
             }
             setLoading(false);
 
@@ -41,8 +45,42 @@ export const WatchMovies = () => {
         }
     };
 
+    const fetchFilteredData = async () => {
+        setLoading(true);
+
+        const { data, error } = await supabase
+            .from('listaSeries')
+            .select(`idListaSeries,
+          id_usuario,
+          serie (
+            id, 
+            titulo, 
+            imagen_url, 
+            descripcion, 
+            fechaEstreno, 
+            puntaje,
+            plataforma (nombre), 
+            director (nombre, apellido),
+            serie_actor (actor (nombre, apellido)),
+            serie_idioma (idioma (nombre))
+          )`)
+            .eq('id_usuario', codigoUsuario);
+
+        if (error) {
+            console.error('Error al obtener los datos:', error);
+            setLoading(false);
+            return;
+        }
+
+        setdatosListaSeries(data);
+        setLoading(false);
+        console.log('Datos de datosListaSeries:', JSON.stringify(data, null, 2));
+    };
+
+
     useEffect(() => {
         fetchData();
+        fetchFilteredData();
     }, []);
 
 
@@ -65,6 +103,21 @@ export const WatchMovies = () => {
     }, []);
 
 
+    // Eliminar listaSeries
+  const deleteListaSeries = async (idListaSeries) => {
+    const { error } = await supabase
+      .from('listaSeries')
+      .delete()
+      .eq('idListaSeries', idListaSeries);
+
+    if (error) {
+      console.error('Error al eliminar listaSerie:', error);
+    } else {
+      setdatosListaSeries(datosListaSeries.filter((listaSerie) => listaSerie.idListaSeries !== idListaSeries));
+    }
+  };
+
+
 
 
 
@@ -81,6 +134,12 @@ export const WatchMovies = () => {
     const cerrarModal = () => {
         setModalVisible(false);
     };
+
+
+
+
+
+    
 
 
     return (
@@ -101,11 +160,11 @@ export const WatchMovies = () => {
                                 </View>
                                 <View style={style.rowModal}>
                                     <View style={style.imagenSerie}>
-                                    <Image
-                                        source={{ uri: datosFiltrados.imagen_url }}
-                                        style={style.imagenSerie}
-                                    />
-                                    </View>                              
+                                        <Image
+                                            source={{ uri: datosFiltrados.imagen_url }}
+                                            style={style.imagenSerie}
+                                        />
+                                    </View>
                                     <View style={style.itemContainerPuntaje}>
                                         <Text style={style.itemTextoPuntaje}>{datosFiltrados.puntaje}</Text>
                                     </View>
@@ -126,17 +185,34 @@ export const WatchMovies = () => {
                         ) : (
                             <Text>No se encontraron datos.</Text>
                         )}
+                        <View style={style.rowSeries}>
                         <PrimaryButton
                             label='Cancelar'
                             onPress={cerrarModal}
                             onLongPress={cerrarModal}
                         />
+                    
+                        </View>
                     </View>
                 </View>
             </Modal>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <ScrollView>
-                <View style={style.sectionTitle}> 
+                <View style={style.sectionTitle}>
                     <Text style={style.mainTitle}>
                         WhatchMovies
                     </Text>
@@ -144,6 +220,35 @@ export const WatchMovies = () => {
                         Series y Peliculas
                     </Text>
                 </View>
+
+                <View style={style.sectionGenre}>
+                    <View>
+                        <Text style={style.titleGenre}>
+                            Lista de Favoritos
+                        </Text>
+                    </View>
+
+                    <View style={style.rowSeries}>
+                        {datosListaSeries.length > 0 ? (
+                            datosListaSeries.map((item, index) => (
+                                <TouchableOpacity key={index} onPress={() => abrirModal(item.serie.id)}>
+                                    <View>
+                                        <Image
+                                            source={{ uri: item.serie.imagen_url }}
+                                            style={style.imagenSerie}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                            ))
+                        ) : (
+                            <Text>Cargando series...</Text>
+                        )}
+
+                    </View>
+
+
+                </View>
+
 
                 <View style={style.sectionGenre}> {/* Div para contener el titulo y las imagenes de seccion 1*/}
                     <View>

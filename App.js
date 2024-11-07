@@ -18,10 +18,21 @@ const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
 
 // Admin Drawer Navigator
-function AdminDrawerNavigator() {
+function AdminDrawerNavigator({ route }) {
+  const { codigoUsuario } = route.params;
   return (
     <Drawer.Navigator initialRouteName="WatchMovies">
-      <Drawer.Screen name="Inicio" component={WatchMovies} />
+      <Drawer.Screen
+        name="WatchMovies"
+        children={({ navigation, route }) => (
+          // Pasamos `codigoUsuario` como prop a WatchMovies
+          <WatchMovies
+            navigation={navigation}
+            route={route}
+            codigoUsuario={codigoUsuario}
+          />
+        )}
+      />
       <Drawer.Screen name="¿Qué Comer?" component={FoodImage} />
       <Drawer.Screen name="CrudActores" component={CrudActores} />
       <Drawer.Screen name="CrudDirectores" component={CrudDirectores} />
@@ -31,6 +42,8 @@ function AdminDrawerNavigator() {
       <Drawer.Screen name="CrudSerie_Actor" component={CrudSerie_actor} />
       <Drawer.Screen name="CrudSerie_Idioma" component={CrudSerie_idioma} />
     </Drawer.Navigator>
+
+
   );
 }
 
@@ -53,10 +66,10 @@ export default function App() {
           component={LoginScreen}
           options={{ headerShown: false }}
         />
-        <Stack.Screen 
-        name="Registro de Usuarios" 
-        component={RegisterScreen} 
-        options={{ headerShown: false }} 
+        <Stack.Screen
+          name="Registro de Usuarios"
+          component={RegisterScreen}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="AdminDrawer"
